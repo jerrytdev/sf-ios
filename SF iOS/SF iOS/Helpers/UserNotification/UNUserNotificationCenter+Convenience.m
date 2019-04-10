@@ -43,7 +43,6 @@ static const NSTimeInterval timeUntilNotification = 10.0;
     
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:requestIdentifier content:content trigger:trigger];
     
-    NSLog(@"This point");
     [[UNUserNotificationCenter currentNotificationCenter] addNotificationRequest:request withCompletionHandler:^(NSError* error) {
         if (error) {
             NSLog(@"Error: %@", error.localizedDescription);
