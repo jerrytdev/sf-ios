@@ -19,4 +19,13 @@
     return self;
 }
 
+- (BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[self class]] == NO) {
+        return NO;
+    }
+    
+    return ([self.name isEqualToString:((Venue*)object).name] &&
+            [self.location isEqual:((Venue*)object).location]);
+}
+
 @end

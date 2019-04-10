@@ -21,4 +21,13 @@
     return self;
 }
 
+- (BOOL)isEqual:(id)object {
+    if ([object isKindOfClass:[self class]] == NO) {
+        return NO;
+    }
+
+    return ([self.streetAddress isEqualToString:((Location*)object).streetAddress] &&
+            [self.location distanceFromLocation:((Location*)object).location] < 0.05);
+}
+
 @end

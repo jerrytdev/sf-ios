@@ -10,6 +10,9 @@
 #import "EventDataSource.h"
 #import "EventsFeedViewController.h"
 #import "NSNotification+ApplicationEventNotifications.h"
+#import <UserNotifications/UserNotifications.h>
+#import "EventChanges.h"
+
 @import CloudKit;
 
 @interface AppDelegate ()
@@ -23,6 +26,14 @@
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
     self.window = [[UIWindow alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
     [self.window makeKeyAndVisible];
+    
+    [[UNUserNotificationCenter currentNotificationCenter]
+     requestAuthorizationWithOptions:UNAuthorizationOptionAlert
+     completionHandler:^(BOOL granted, NSError *error){}];
+    
+    /* 2019-04-09 Placeholder
+    [application setMinimumBackgroundFetchInterval:21600]; // 6 hours
+    */
     
     EventDataSource *datasource = [[EventDataSource alloc] initWithEventType:EventTypeSFCoffee];
     EventsFeedViewController *feedController = [[EventsFeedViewController alloc] initWithDataSource:datasource];
@@ -60,5 +71,10 @@
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
 
+// MARK: - Background Fetch
+- (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
+    EventChanges *eventChanges = [[EventChanges alloc] init];
+    [eventChanges checkForEventDifferences];
+}
 
 @end
