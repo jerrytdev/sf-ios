@@ -12,12 +12,13 @@
 @implementation Venue
 - (id)initWithDictionary:(NSDictionary *)dict {
     if (self = [super init]) {
-        self.venueURL = [[NSURL alloc] initWithString:dict[@"url"]];
+        self.venueURLString = dict[@"url"];
         self.location = [[Location alloc] initWithDictionary:dict[@"location"]];
         self.name = dict[@"name"];
     }
     return self;
 }
+
 
 - (BOOL)isEqual:(id)object {
     if ([object isKindOfClass:[self class]] == NO) {
@@ -26,6 +27,17 @@
     
     return ([self.name isEqualToString:((Venue*)object).name] &&
             [self.location isEqual:((Venue*)object).location]);
+}
+
++ (NSString *)primaryKey {
+    return @"venueURLString";
+}
+
+- (nullable NSURL *)venueURL {
+    if (!self.venueURLString) {
+        return nil;
+    }
+    return [[NSURL alloc] initWithString:self.venueURLString];
 }
 
 @end

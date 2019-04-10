@@ -10,29 +10,29 @@
 #import "NSDate+Utilities.h"
 #import "Venue.h"
 
-@import CloudKit;
-
 @implementation Event
 
 - (instancetype)initWithDictionary:(NSDictionary *)record {
     if (self = [super init]) {
-        self.type = EventTypeSFCoffee;
+        self.eventID = record[@"id"];
+        self.type = 0;
         NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
         [formatter setDateFormat:@"yyyy-MM-dd'T'HH:mm:ss.SSSZ"];
         NSString *startAt = record[@"start_at"];
         self.date = [formatter dateFromString:startAt];
-        NSDate *endDate = [formatter dateFromString:record[@"end_at"]];
-        self.duration = [endDate timeIntervalSinceDate:self.date];
+        self.endDate = [formatter dateFromString:record[@"end_at"]];
+        self.duration = [self.endDate timeIntervalSinceDate:self.date];
         self.venue = [[Venue alloc] initWithDictionary:record[@"venue"]];
 
-        NSString *imageURLString = record[@"image_url"];
-        if (![imageURLString isKindOfClass:[NSNull class]]) {
-            self.imageFileURL = [[NSURL alloc] initWithString:imageURLString];
-        }
+        self.imageFileURLString = record[@"image_url"];
         self.name = record[@"name"];
     }
     
     return self;
+}
+
++ (NSString *)primaryKey {
+    return @"eventID";
 }
 
 - (UIImage *)annotationImage {
@@ -43,6 +43,9 @@
         default:
             break;
     }
+    // For now there are no other types
+    return [UIImage imageNamed:@"coffee-location-icon"];
+
 }
 
 - (NSDate *)endDate {
@@ -53,7 +56,7 @@
     return self.endDate.isInFuture;
 }
 
-- (NSURL *)venueURL {
+- (nullable NSURL *)venueURL {
     return self.venue.venueURL;
 }
 
@@ -73,6 +76,13 @@
     return ([self.date compare:((Event*)object).date] == NSOrderedSame &&
             [self.name isEqualToString:((Event*)object).name] &&
             [self.venue isEqual:((Event*)object).venue] );
+}
+
+- (nullable NSURL *)imageFileURL {
+    if (!self.imageFileURLString) {
+        return nil;
+    }
+    return [[NSURL alloc] initWithString:self.imageFileURLString];
 }
 
 @end

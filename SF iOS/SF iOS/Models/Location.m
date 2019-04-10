@@ -15,8 +15,8 @@
         self.streetAddress = dict[@"formatted_address"];
         CLLocationDegrees latitude = [dict[@"latitude"] doubleValue];
         CLLocationDegrees longitude = [dict[@"longitude"] doubleValue];
-        self.location = [[CLLocation alloc] initWithLatitude:latitude
-                                                   longitude:longitude];
+        self.latitude = latitude;
+        self.longitude = longitude;
     }
     return self;
 }
@@ -25,9 +25,18 @@
     if ([object isKindOfClass:[self class]] == NO) {
         return NO;
     }
-
+    
     return ([self.streetAddress isEqualToString:((Location*)object).streetAddress] &&
             [self.location distanceFromLocation:((Location*)object).location] < 0.05);
+}
+
++ (NSString *)primaryKey {
+    return @"streetAddress";
+}
+
+- (CLLocation *)location {
+    return [[CLLocation alloc] initWithLatitude:self.latitude
+                                      longitude:self.longitude];
 }
 
 @end

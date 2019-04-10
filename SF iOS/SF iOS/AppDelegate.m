@@ -13,8 +13,6 @@
 #import <UserNotifications/UserNotifications.h>
 #import "EventChanges.h"
 
-@import CloudKit;
-
 @interface AppDelegate ()
 
 @property (nonatomic) EventDataSource *dataSource;
