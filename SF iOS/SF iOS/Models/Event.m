@@ -64,16 +64,6 @@
     return self.venue.name;
 }
 
-- (BOOL)isEqual:(id)object {
-    if ([object isKindOfClass:[self class]] == NO) {
-        return NO;
-    }
-
-    return ([self.date compare:((Event*)object).date] == NSOrderedSame &&
-            [self.name isEqualToString:((Event*)object).name] &&
-            [self.venue isEqual:((Event*)object).venue] );
-}
-
 - (nullable NSURL *)imageFileURL {
     if (!self.imageFileURLString) {
         return nil;
