@@ -30,4 +30,13 @@
     return [[NSURL alloc] initWithString:self.venueURLString];
 }
 
+- (BOOL)isEqual:(Venue *)object {
+    return [[self venueURLString] isEqualToString:[object venueURLString]] &&
+    [[self name] isEqualToString:[object name]] &&
+    [[self location] isEqual:[object location]];
+}
+
+-(NSUInteger)hash {
+    return [[self venueURLString] hash] + [[self name] hash] + [[self location] hash];
+}
 @end

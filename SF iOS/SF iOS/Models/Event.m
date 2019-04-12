@@ -71,4 +71,29 @@
     return [[NSURL alloc] initWithString:self.imageFileURLString];
 }
 
+
+- (BOOL)isEqual:(Event *)object {
+    return [[self eventID] isEqualToString:[object eventID]] &&
+    [self type] == [object type] &&
+    [[self date] isEqualToDate:[object date]] &&
+    [self duration] == [object duration] &&
+    [[self venue] isEqual:[object venue]] &&
+    [[self name] isEqualToString:[object name]] &&
+    [[self endDate] isEqualToDate:[object endDate]] &&
+    [self isActive] == [object isActive] &&
+    [[self imageFileURLString] isEqualToString:[object imageFileURLString]];
+}
+
+-(NSUInteger)hash {
+    return [[self eventID] hash] +
+    [self type] +
+    [[self date] hash] +
+    [self duration] +
+    [[self venue] hash] +
+    [[self name] hash] +
+    [[self endDate] hash] +
+    [self isActive] +
+    [[self imageFileURLString] hash];
+}
+
 @end
