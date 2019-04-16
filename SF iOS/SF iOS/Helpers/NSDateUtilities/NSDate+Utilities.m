@@ -24,11 +24,12 @@
 
 -(NSString *)relativeDayRepresentation {
     if (self.isYesterday) {
-        return @"Yesterday";
+        return NSLocalizedString(@"Yesterday",
+                                 @"The day before today");
     } else if (self.isToday) {
-        return @"Today";
+        return NSLocalizedString(@"Today", @"Today");
     } else if (self.isTomorrow) {
-        return @"Tomorrow";
+        return NSLocalizedString(@"Tomorrow", @"Tomorrow");
     } else {
         return nil;
     }

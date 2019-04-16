@@ -7,16 +7,14 @@
 //
 
 #import "AppDelegate.h"
-#import "EventDataSource.h"
-#import "EventsFeedViewController.h"
 #import "NSNotification+ApplicationEventNotifications.h"
 #import <UserNotifications/UserNotifications.h>
 #import "EventChanges.h"
-
+#import "SwipableNavigationContainer.h"
 
 @interface AppDelegate ()
 
-@property (nonatomic) EventDataSource *dataSource;
+@property (nonatomic) SwipableNavigationContainer *navigationContainer;
 
 @end
 
@@ -54,20 +52,23 @@
     // If your application supports background execution, this method is called instead of applicationWillTerminate: when the user quits.
 }
 
-
-- (void)applicationWillEnterForeground:(UIApplication *)application {
-    // Called as part of the transition from the background to the active state; here you can undo many of the changes made on entering the background.
+- (BOOL)application:(UIApplication *)application willFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    self.navigationContainer = [[SwipableNavigationContainer alloc] init];
+    return YES;
 }
 
+- (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [self.navigationContainer.window makeKeyAndVisible];
+    return YES;
+}
 
 - (void)applicationDidBecomeActive:(UIApplication *)application {
     // Restart any tasks that were paused (or not yet started) while the application was inactive. If the application was previously in the background, optionally refresh the user interface.
     [[NSNotificationCenter defaultCenter] postNotificationName:NSNotification.applicationBecameActiveNotification object:nil];
 }
 
-
-- (void)applicationWillTerminate:(UIApplication *)application {
-    // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
+- (UIWindow *)window {
+    return self.navigationContainer.window;
 }
 
 // MARK: - Background Fetch
