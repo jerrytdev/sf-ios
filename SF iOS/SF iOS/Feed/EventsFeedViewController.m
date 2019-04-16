@@ -230,16 +230,6 @@ static CGFloat const eventCellAspectRatio = 1.352;
 
 //MARK: - First Load
 
-- (void)refresh {
-    if (!self.firstLoad) {
-        [self.tableView reloadData];
-        return;
-    }
-    
-    [self animateFirstLoad];
-    self.firstLoad = false;
-}
-
 - (void)animateFirstLoad {
     [self.tableView reloadData];
     
