@@ -8,113 +8,111 @@
 
 #import "EventChanges.h"
 #import "Event.h"
-#import "FeedFetchService.h"
 #import "UNUserNotificationCenter+Convenience.h"
 #import "NSDate+Utilities.h"
+#import "EventDataSource.h"
+#import <Realm/Realm.h>
 
-@interface EventChanges ()
-@property (nonatomic) FeedFetchService *service;
+@interface EventChanges () <EventDataSourceDelegate>
+//@property (nonatomic) FeedFetchService *service;
+@property(nonatomic, strong) EventDataSource *eventDataSource;
+
+@property(nonatomic, strong) RLMResults<Event*> *persistedEvents;
+
+
 @end
 
 @implementation EventChanges
 
 - (instancetype)init {
     if (self = [super init]) {
-        self.service = [[FeedFetchService alloc] init];
+        // Pre-check current and future events
+        self.persistedEvents = [Event objectsWhere:@"self.date >= %@", [NSDate date]];
+        
+        self.eventDataSource = [[EventDataSource alloc] initWithEventType:EventTypeSFCoffee];
+        self.eventDataSource.delegate = self;
     }
     return self;
 }
 
 // MARK: - Check for changes
 - (void)checkForEventDifferences {
-    
-    [self fetchAndCompareEvents:^(NSArray<Event*> *updatedEvents, NSError *error) {
-        if (updatedEvents.count > 0) {
-            
-            NSString *contentTitle = [NSString stringWithFormat:@"%ld Coffee Events Changed", updatedEvents.count];
-            
-            NSMutableArray *body = [[NSMutableArray alloc] init];
-            for (Event *event in updatedEvents) {
-                [body addObject:event.name];
-            }
-            
-            NSString *contentBody = [body componentsJoinedByString:@", "];
-            
-            [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:contentTitle contentBody:contentBody];
-        }
-    }];
+    [self.eventDataSource refresh];
 }
 
 
-- (void)fetchAndCompareEvents:(void (^)(NSArray<Event*> * __nullable events, NSError * __nullable error))completion {
-    dispatch_queue_t defaultQueue = dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0);
-    dispatch_group_t eventsGroup = dispatch_group_create();
+- (void)eventsChanged:(NSNumber* _Nullable)numberEventsModified withError:(NSError* _Nullable)error withCompletion:(EventChangeCompletion)completionHandler {
     
-    __block NSArray<Event*> *events;
-    dispatch_group_enter(eventsGroup);
-    dispatch_group_async(eventsGroup, defaultQueue, ^() {
-        [self getLatestEvents:^(NSArray<Event*> *currentEvents, NSError *error) {
-            if (!error) {
-                events = currentEvents;
-                dispatch_group_leave(eventsGroup);
-            } else {
-                NSLog(@"Update events error: %@", error.localizedDescription);
-            }
-        }];
-    });
+    if (error) {
+        completionHandler(nil,error);
+    }
     
-    __block NSArray<Event*> *persistedEvents;
-    dispatch_group_enter(eventsGroup);
-    dispatch_group_async(eventsGroup, defaultQueue, ^() {
-        [self eventsFromPersistence:^(NSArray<Event*> *savedEvents, NSError *error) {
-            if (!error) {
-                persistedEvents = savedEvents;
-                dispatch_group_leave(eventsGroup);
-            } else {
-                NSLog(@"Persisted events error: %@", error.localizedDescription);
-            }
-        }];
-    });
+//    if ([numberEventsModified integerValue] && !error) {
     
-    dispatch_group_notify(eventsGroup, dispatch_get_global_queue(QOS_CLASS_USER_INITIATED, 0), ^(){
-        if (persistedEvents && events) {
-            NSArray *updatedEvents = [self compareFutureEvents:events withStoredEvents:persistedEvents];
-            completion(updatedEvents,nil);
-        }
-    });
+        NSString *contentTitle = [NSString stringWithFormat:@"%ld Coffee Events Changed", [numberEventsModified integerValue]];
+        
+        NSString *contentBody = @"";
+        
+        [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:contentTitle contentBody:contentBody];
+        
+        completionHandler(@(YES),nil);
+//    }
+//
+//    completionHandler(@(NO),nil);
+
+    /*
+     -(void)getFeedWithHandler:(FeedFetchCompletionHandler)completionHandler {
+     FeedFetchOperation *operation = [[FeedFetchOperation alloc] initWithCompletionHandler:^(NSArray<NSDictionary *> *feed, NSError *_Nullable error) {
+     NSMutableArray<Event *> *events = [[NSMutableArray alloc] initWithCapacity:feed.count];
+     for (NSDictionary *dict in feed) {
+     [events addObject:[[Event alloc] initWithDictionary:dict]];
+     }
+     completionHandler(events, error);
+     }];
+     [self.feedFetchQueue addOperation:operation];
+     }
+     */
+
 }
 
-// Note: Check for changes two hours in the past
-- (NSArray<Event*> *)compareFutureEvents:(NSArray<Event*> *)futureEvents withStoredEvents:(NSArray<Event*> *)storedEvents {
-    
-    NSPredicate *futureEventsPredicate = [NSPredicate predicateWithFormat:@"self.date >= %@", [[NSDate date] dateByAddingTimeInterval:-7200]];
-    NSArray *upcomingEvents = [futureEvents filteredArrayUsingPredicate:futureEventsPredicate];
-    NSArray *persistedEvents = [storedEvents filteredArrayUsingPredicate:futureEventsPredicate];
-    
+- (NSArray<Event*> *)compareFutureEvents:(RLMResults<Event*> *)futureEvents withStoredEvents:(RLMResults<Event*> *)persistedEvents {
     NSMutableArray *differencesArray = [[NSMutableArray alloc] init];
-    for (Event *event in upcomingEvents) {
-        if ([persistedEvents containsObject:event] == NO) {
+    for (Event *event in futureEvents) {
+        if ([persistedEvents indexOfObject:event] == NSNotFound) {
             [differencesArray addObject:event];
         }
     }
     return differencesArray;
 }
 
+// MARK: - EventDataSourceDelegate
+- (void)didChangeDataSourceWithInsertions:(nullable NSArray <NSIndexPath *> *)insertions
+                                  updates:(nullable NSArray <NSIndexPath *> *)updates
+                                deletions:(nullable NSArray <NSIndexPath *> *)deletions {
+    NSLog(@"%s",__FUNCTION__);
 
-// Current list on server
-- (void)getLatestEvents:(void (^)(NSArray<Event*> * __nullable events, NSError * __nullable error))completion {
-    [self.service getFeedWithHandler:^(NSArray<Event *> * _Nonnull feedFetchItems, NSError * _Nullable error) {
-        if (error) {
-            completion(nil,error);
-        } else {
-            completion(feedFetchItems,nil);
-        }
-    }];
+//    NSLog(@"Strange behavior insertions: %ld\ndeletions: %ld\nupdates: %ld", insertions.count, deletions.count, updates.count);
+    
+    [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:@"No updates" contentBody:@"Did Change"];
+
 }
 
-
-- (void)eventsFromPersistence:(void (^)(NSArray<Event*> * __nullable events, NSError * __nullable error))completion {
-    completion(@[],nil);
+- (void)willUpdateDataSource:(EventDataSource *)datasource {
+    NSLog(@"%s",__FUNCTION__);
+    
+    RLMResults<Event*> *futureEvents = [Event objectsWhere:@"self.date >= %@", [NSDate date]];
+    
+    NSArray *eventListModified = [self compareFutureEvents:futureEvents withStoredEvents:_persistedEvents];
+    
+    if (eventListModified.count > 0) {
+        [self eventsChanged:@(eventListModified.count) withError:nil withCompletion:^(NSNumber *_Nullable eventsHaveChanged, NSError *_Nullable error){}];
+    }
 }
+
+- (void)didFailToUpdateWithError:(NSError *)error {
+    NSLog(@"%s",__FUNCTION__);
+    [self eventsChanged:nil withError:error withCompletion:^(NSNumber *_Nullable eventsHaveChanged, NSError *_Nullable error){}];
+}
+
 
 @end
