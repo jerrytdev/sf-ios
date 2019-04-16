@@ -21,20 +21,15 @@
     return self;
 }
 
-+ (NSString *)primaryKey {
-    return @"streetAddress";
-}
-
 - (CLLocation *)location {
     return [[CLLocation alloc] initWithLatitude:self.latitude
                                       longitude:self.longitude];
 }
 
 - (BOOL)isEqual:(Location *)object {
-    return [[self streetAddress] isEqualToString:[object streetAddress]];
-//    return [[self streetAddress] isEqualToString:[object streetAddress]] &&
-//    [self latitude] == [object latitude] &&
-//    [self longitude] == [object longitude];
+    return [[self streetAddress] isEqualToString:[object streetAddress]] &&
+    [self latitude] == [object latitude] &&
+    [self longitude] == [object longitude];
 }
 
 -(NSUInteger)hash {

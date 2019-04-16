@@ -81,7 +81,7 @@
     [[self name] isEqualToString:[object name]] &&
     [[self endDate] isEqualToDate:[object endDate]] &&
     [self isActive] == [object isActive] &&
-    [[self imageFileURLString] isEqualToString:[object imageFileURLString]];
+    ([[self imageFileURLString] isEqualToString:[object imageFileURLString]] || [self imageFileURLString] == nil);
 }
 
 -(NSUInteger)hash {
