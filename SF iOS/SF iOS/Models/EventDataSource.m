@@ -42,7 +42,9 @@
                                       }
                                       // Initial run of the query will pass nil for the change information
                                       if (!changes) {
-                                          return;
+                                          [welf.delegate didChangeDataSourceWithInsertions:nil
+                                                                                   updates:nil
+                                                                                 deletions:nil];
                                       }
 
                                       NSArray *inserts = [changes insertionsInSection:0];
@@ -93,9 +95,16 @@
             }
         }
 
-        [realm transactionWithBlock:^{
-            [realm addOrUpdateObjects:addToRealm];
-        }];
+        if ([addToRealm count]) {
+            [realm transactionWithBlock:^{
+                [realm addOrUpdateObjects:addToRealm];
+            }];
+        } else {
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [welf.delegate didChangeDataSourceWithInsertions:nil updates:nil deletions:nil];
+            });
+        }
+
     }];
     [self.delegate willUpdateDataSource:self];
 }
