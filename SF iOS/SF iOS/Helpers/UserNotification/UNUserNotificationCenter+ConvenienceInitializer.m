@@ -6,7 +6,7 @@
 //  Copyright © 2019 Amit Jain. All rights reserved.
 //
 
-#import "UNUserNotificationCenter+Convenience.h"
+#import "UNUserNotificationCenter+ConvenienceInitializer.h"
 #import "NSDate+Utilities.h"
 
 static const NSTimeInterval timeUntilNotification = 10.0;

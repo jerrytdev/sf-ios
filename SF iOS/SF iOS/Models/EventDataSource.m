@@ -13,6 +13,7 @@
 #import "NSNotification+ApplicationEventNotifications.h"
 #import "FeedFetchService.h"
 #import <Realm/Realm.h>
+#import "UNUserNotificationCenter+ConvenienceInitializer.h"
 
 @interface EventDataSource ()
 
@@ -90,7 +91,6 @@
                     [addToRealm addObject:parsedEvent];
                 }
             } else {
-                // if this is an item that is not in the realm, add it
                 [addToRealm addObject:parsedEvent];
             }
         }
@@ -98,6 +98,11 @@
         if ([addToRealm count]) {
             [realm transactionWithBlock:^{
                 [realm addOrUpdateObjects:addToRealm];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
+                        [self sendLocalNotification:@(addToRealm.count)];
+                    }
+                });
             }];
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -128,6 +133,13 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.applicationBecameActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         [welf refresh];
     }];
+}
+
+// MARK: - Notification
+- (void)sendLocalNotification:(NSNumber*)numEventsChanged {
+    NSString *contentTitle = [NSString stringWithFormat:@"%@ CoffUp Changed", numEventsChanged];
+    
+    [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:contentTitle contentBody:@""];
 }
 
 @end
