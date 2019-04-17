@@ -13,7 +13,6 @@
 #import "NSNotification+ApplicationEventNotifications.h"
 #import "FeedFetchService.h"
 #import <Realm/Realm.h>
-#import "UNUserNotificationCenter+ConvenienceInitializer.h"
 
 @interface EventDataSource ()
 
@@ -46,6 +45,7 @@
                                           [welf.delegate didChangeDataSourceWithInsertions:nil
                                                                                    updates:nil
                                                                                  deletions:nil];
+                                          return;
                                       }
 
                                       NSArray *inserts = [changes insertionsInSection:0];
@@ -66,6 +66,7 @@
 - (void)refresh {
     __weak typeof(self) welf = self;
     [self.service getFeedWithHandler:^(NSArray<Event *> * _Nonnull feedFetchItems, NSError * _Nullable error) {
+        NSLog(@"%s",__FUNCTION__);
         if (error) {
             dispatch_async(dispatch_get_main_queue(), ^{
                 [welf.delegate didFailToUpdateWithError:error];
@@ -88,21 +89,17 @@
             if (existingEvent) {
                 // If the event exists in the realm AND the parsed event is different, add it to the realm
                 if(![existingEvent isEqual:parsedEvent]) {
+                    NSLog(@"Not equal %@", parsedEvent);
                     [addToRealm addObject:parsedEvent];
                 }
             } else {
                 [addToRealm addObject:parsedEvent];
             }
         }
-
+        NSLog(@"Adding ?? %ld", [addToRealm count]);
         if ([addToRealm count]) {
             [realm transactionWithBlock:^{
                 [realm addOrUpdateObjects:addToRealm];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    if ([[UIApplication sharedApplication] applicationState] == UIApplicationStateBackground) {
-                        [self sendLocalNotification:@(addToRealm.count)];
-                    }
-                });
             }];
         } else {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -133,13 +130,6 @@
     [[NSNotificationCenter defaultCenter] addObserverForName:NSNotification.applicationBecameActiveNotification object:nil queue:nil usingBlock:^(NSNotification * _Nonnull note) {
         [welf refresh];
     }];
-}
-
-// MARK: - Notification
-- (void)sendLocalNotification:(NSNumber*)numEventsChanged {
-    NSString *contentTitle = [NSString stringWithFormat:@"%@ CoffUp Changed", numEventsChanged];
-    
-    [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:contentTitle contentBody:@""];
 }
 
 @end

@@ -9,14 +9,12 @@
 #import "UNUserNotificationCenter+ConvenienceInitializer.h"
 #import "NSDate+Utilities.h"
 
-static const NSTimeInterval timeUntilNotification = 10.0;
 
 @implementation UNUserNotificationCenter(Convenience)
 
 - (void)scheduleNotificationWithIdentifier:(NSString*)identifier
                                    content:(UNMutableNotificationContent*)content
                                    trigger:(UNTimeIntervalNotificationTrigger*)trigger {
-    content.badge = @(1);
     
     UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:trigger];
     
@@ -30,14 +28,14 @@ static const NSTimeInterval timeUntilNotification = 10.0;
 - (void)scheduleNotificationWithIdentifier:(NSString* __nullable)identifier
                               contentTitle:(NSString*)title
                                contentBody:(NSString*)body {
-     
+    
+    // Must be greater than 0.0
     UNTimeIntervalNotificationTrigger* trigger = [UNTimeIntervalNotificationTrigger
-                                                  triggerWithTimeInterval:(timeUntilNotification) repeats: NO];
+                                                  triggerWithTimeInterval:(0.2) repeats: NO];
     
     UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
     content.title = title;
     content.body = body;
-    content.badge = @(1);
 
     NSString *requestIdentifier = (identifier != nil) ? identifier : [[NSDate date] stringWithformat:@"yyyyMMdd:hhmmss"];
     

@@ -10,8 +10,7 @@
 #import "NSNotification+ApplicationEventNotifications.h"
 #import "FeedFetchService.h"
 #import "SwipableNavigationContainer.h"
-
-#import "EventDataSource.h"
+#import "BackgroundFetcher.h"
 #import <UserNotifications/UserNotifications.h>
 
 @interface AppDelegate ()
@@ -20,8 +19,7 @@
 
 @property (nonatomic) FeedFetchService *service;
 
-@property (nonatomic) EventDataSource *eventDataSource;
-@property (nonatomic) UIBackgroundTaskIdentifier backgroundTaskId;
+@property (nonatomic) BackgroundFetcher *bgFetcher;
 
 @end
 
@@ -44,7 +42,6 @@
      completionHandler:^(BOOL granted, NSError *error){}];
     
     [application setMinimumBackgroundFetchInterval:21600]; // 6 hours
-    self.eventDataSource = [[EventDataSource alloc] init];
     
     self.service = [[FeedFetchService alloc] init];
     
@@ -53,6 +50,8 @@
 }
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions {
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:0];
+
     [self.navigationContainer.window makeKeyAndVisible];
     
     return YES;
@@ -69,28 +68,14 @@
 
 // MARK: - Background Fetch
 - (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
-    if ([application applicationState] != UIApplicationStateBackground) {
-        completionHandler(UIBackgroundFetchResultNoData);
-        return;
-    }
+
+    //    2019-04-17 12:47:55.403777-0700 Coffup[33935:747321] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'this request has been neutered - you can't call -sendResponse: twice nor after encoding it'
+    self.bgFetcher = [[BackgroundFetcher alloc] initWithCompletionHandler:^(UIBackgroundFetchResult result) {
+        completionHandler(result);
+        self.bgFetcher = nil;
+    }];
     
-    if ([application applicationState] == UIApplicationStateBackground) {
-        dispatch_async(dispatch_get_main_queue(), ^{            
-            self.backgroundTaskId = [[UIApplication sharedApplication] beginBackgroundTaskWithName:@"events" expirationHandler:^{
-                [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTaskId];
-                self.backgroundTaskId = UIBackgroundTaskInvalid;
-            }];
-            
-            [self.eventDataSource refresh];
-            
-            [[UIApplication sharedApplication] endBackgroundTask:self.backgroundTaskId];
-            self.backgroundTaskId = UIBackgroundTaskInvalid;
-            
-            completionHandler(UIBackgroundFetchResultNewData);
-        });
-    } else {
-        completionHandler(UIBackgroundFetchResultNoData);
-    }
 }
+
 
 @end

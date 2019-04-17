@@ -71,7 +71,6 @@
     return [[NSURL alloc] initWithString:self.imageFileURLString];
 }
 
-
 - (BOOL)isEqual:(Event *)object {
     return [[self eventID] isEqualToString:[object eventID]] &&
     [self type] == [object type] &&
@@ -95,5 +94,4 @@
     [self isActive] +
     [[self imageFileURLString] hash];
 }
-
 @end
