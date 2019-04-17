@@ -69,7 +69,7 @@
 // MARK: - Background Fetch
 - (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
 
-    //    2019-04-17 12:47:55.403777-0700 Coffup[33935:747321] *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'this request has been neutered - you can't call -sendResponse: twice nor after encoding it'
+    //    nil due to *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'this request has been neutered - you can't call -sendResponse: twice nor after encoding it'
     self.bgFetcher = [[BackgroundFetcher alloc] initWithCompletionHandler:^(UIBackgroundFetchResult result) {
         completionHandler(result);
         self.bgFetcher = nil;

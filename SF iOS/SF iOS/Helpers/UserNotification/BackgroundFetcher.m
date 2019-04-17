@@ -44,7 +44,6 @@
     if (insertions == nil && deletions == nil && updates == nil) {
         return;
     }
-    NSLog(@"%@  %@  %@", insertions, updates, deletions);
     
         // Check for the early return opportunity
         if ([updates count] == 0 && [deletions count] == 0 && [insertions count] == 0) {
