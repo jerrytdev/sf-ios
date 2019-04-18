@@ -2,7 +2,7 @@
 //  BackgroundFetcher.m
 //  Coffup
 //
-//  Created by Jerry Tung on 4/17/19.
+//  Created by Roderic Campbell on 4/17/19.
 //
 
 #import "BackgroundFetcher.h"
@@ -42,55 +42,52 @@
 - (void)didChangeDataSourceWithInsertions:(nullable NSArray<NSIndexPath *> *)insertions updates:(nullable NSArray<NSIndexPath *> *)updates deletions:(nullable NSArray<NSIndexPath *> *)deletions {
     
     if (insertions == nil && deletions == nil && updates == nil) {
+        self.backgroundCompletionBlock(UIBackgroundFetchResultNoData);
         return;
     }
     
-        // Check for the early return opportunity
-        if ([updates count] == 0 && [deletions count] == 0 && [insertions count] == 0) {
-                // should be obvious, but we DO NOT want to send a local notification in this case
-                NSString *contentTitle = @"Coffee Events No change";
-                NSString *contentBody = @"No changes";
-                [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:nil contentTitle:contentTitle contentBody:contentBody];
+    // Check for the early return opportunity
+    if ([updates count] == 0 && [deletions count] == 0 && [insertions count] == 0) {
+        // looks like the data source told us that nothing changed. We're done so
+        // we give that feedback to the OS. Maybe next time it'll request a little
+        // less frequently.
         
-                // looks like the data source told us that nothing changed. We're done so
-                // we give that feedback to the OS. Maybe next time it'll request a little
-                // less frequently.
-            
-                self.backgroundCompletionBlock(UIBackgroundFetchResultNoData);
-//            self.backgroundCompletionBlock = nil;
-                return;
-            }
-    
-        // Updates have a specific notification: "Blue  bottle updated" or whatever
-        for (NSIndexPath *update in updates) {
-                NSString *contentTitle = @"Coffee Events change";
-                Event *event = [self.backgroundDataSource eventAtIndex:[update row]];
-                NSString *contentBody = [NSString stringWithFormat:@"%@ at %@ has changed. Find the latest info in app.", event.name, event.venueName];
-                // Special note here, the eventID should probably be passed in, otherwise we'll only get the last notification here. We really want all of them probably.
-                [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
-            }
-    
-        // This is a new event, it should have a nice alert.
-        for (NSIndexPath *insert in insertions) {
-                Event *event = [self.backgroundDataSource eventAtIndex:[insert row]];
-                NSString *contentTitle = @"New Coffee Event";
-                NSString *contentBody = [NSString stringWithFormat:@"meet your friends at %@ for %@", event.venueName, event.name];
-                [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
-            }
-    
-        // And finally deletes get custom copy
-        for (NSIndexPath *delete in deletions) {
-                Event *event = [self.backgroundDataSource eventAtIndex:[delete row]];
-                NSString *contentTitle = @"Coffee Event Cancelled";
-                NSString *contentBody = [NSString stringWithFormat:@"%@ has been cancelled", event.name];
-                [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
-            }
-
-    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:(updates.count+insertions.count+deletions.count)];
-    
-        // Tell the OS that we got new data. It should adjust accordingly.
-        self.backgroundCompletionBlock(UIBackgroundFetchResultNewData);
+        self.backgroundCompletionBlock(UIBackgroundFetchResultNoData);
+        return;
     }
+    
+    // Updates have a specific notification: "Blue  bottle updated" or whatever
+    for (NSIndexPath *update in updates) {
+        NSString *contentTitle = @"Coffee Events change";
+        Event *event = [self.backgroundDataSource eventAtIndex:[update row]];
+        NSString *contentBody = [NSString stringWithFormat:@"%@ at %@ has changed. Find the latest info in app.", event.name, event.venueName];
+        // Special note here, the eventID should probably be passed in, otherwise we'll only get the last notification here. We really want all of them probably.
+        [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
+    }
+    
+    // This is a new event, it should have a nice alert.
+    for (NSIndexPath *insert in insertions) {
+        Event *event = [self.backgroundDataSource eventAtIndex:[insert row]];
+        NSString *contentTitle = @"New Coffee Event";
+        NSString *contentBody = [NSString stringWithFormat:@"meet your friends at %@ for %@", event.venueName, event.name];
+        [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
+    }
+    
+    // And finally deletes get custom copy
+    for (NSIndexPath *delete in deletions) {
+        Event *event = [self.backgroundDataSource eventAtIndex:[delete row]];
+        NSString *contentTitle = @"Coffee Event Cancelled";
+        NSString *contentBody = [NSString stringWithFormat:@"%@ has been cancelled", event.name];
+        [[UNUserNotificationCenter currentNotificationCenter] scheduleNotificationWithIdentifier:event.eventID contentTitle:contentTitle contentBody:contentBody];
+    }
+    
+    // Increment the badge value by one every time a fetch with a change occurs
+    NSInteger currentBadgeCount = [[UIApplication sharedApplication] applicationIconBadgeNumber];
+    [[UIApplication sharedApplication] setApplicationIconBadgeNumber:(currentBadgeCount+1)];
+    
+    // Tell the OS that we got new data. It should adjust accordingly.
+    self.backgroundCompletionBlock(UIBackgroundFetchResultNewData);
+}
 
 - (void)didFailToUpdateWithError:(nonnull NSError *)error {
         self.backgroundCompletionBlock(UIBackgroundFetchResultFailed);

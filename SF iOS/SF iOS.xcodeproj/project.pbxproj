@@ -66,6 +66,7 @@
 		CED16D5C64A6DD2CE70F99F8 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 669D4943CDB7B5B8CBC1B27E /* libPods-SF iOSTests.a */; };
 		E0037C5422A4AF58E1158B64 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 238F3C1035E918F044128123 /* libPods-SF iOSTests.a */; };
 		E28D38E12267B259004266BA /* BackgroundFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E02267B259004266BA /* BackgroundFetcher.m */; };
+		E28D38E32267CF5B004266BA /* BackgroundFetcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E22267CF5B004266BA /* BackgroundFetcherTests.m */; };
 		E2EDC106225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */; };
 /* End PBXBuildFile section */
 
@@ -205,6 +206,7 @@
 		C8E6A3EC1F3256180098339C /* EventDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventDetailsViewController.m; sourceTree = "<group>"; };
 		E28D38DF2267B259004266BA /* BackgroundFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundFetcher.h; sourceTree = "<group>"; };
 		E28D38E02267B259004266BA /* BackgroundFetcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundFetcher.m; sourceTree = "<group>"; };
+		E28D38E22267CF5B004266BA /* BackgroundFetcherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundFetcherTests.m; sourceTree = "<group>"; };
 		E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UNUserNotificationCenter+ConvenienceInitializer.m"; sourceTree = "<group>"; };
 		E2EDC105225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UNUserNotificationCenter+ConvenienceInitializer.h"; sourceTree = "<group>"; };
 		E76C9B6B05C350D2C01B6FE4 /* Pods-SF iOSTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SF iOSTests.release.xcconfig"; path = "Target Support Files/Pods-SF iOSTests/Pods-SF iOSTests.release.xcconfig"; sourceTree = "<group>"; };
@@ -483,6 +485,7 @@
 				5FECEFD8224EE87D00AA8A25 /* EventTests.m */,
 				5FECEFDA224EEB3100AA8A25 /* VenueTests.m */,
 				5FECEFDC224EEBE900AA8A25 /* LocationTests.m */,
+				E28D38E22267CF5B004266BA /* BackgroundFetcherTests.m */,
 			);
 			path = "SF iOSTests";
 			sourceTree = "<group>";
@@ -895,6 +898,7 @@
 				5FECEFDD224EEBE900AA8A25 /* LocationTests.m in Sources */,
 				C88A19C81F2EC56600C08187 /* EventDataSourceTests.m in Sources */,
 				5FECEFDB224EEB3100AA8A25 /* VenueTests.m in Sources */,
+				E28D38E32267CF5B004266BA /* BackgroundFetcherTests.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
