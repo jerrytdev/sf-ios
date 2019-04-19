@@ -65,7 +65,8 @@
 		C8CEC9841F3AB342002A8D88 /* UIViewController+StatusBarBackground.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CEC9831F3AB342002A8D88 /* UIViewController+StatusBarBackground.m */; };
 		CED16D5C64A6DD2CE70F99F8 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 669D4943CDB7B5B8CBC1B27E /* libPods-SF iOSTests.a */; };
 		E0037C5422A4AF58E1158B64 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 238F3C1035E918F044128123 /* libPods-SF iOSTests.a */; };
-		E28D38E12267B259004266BA /* BackgroundFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E02267B259004266BA /* BackgroundFetcher.m */; };
+		E2403A2A22692275009BD4FF /* db.json in Resources */ = {isa = PBXBuildFile; fileRef = E2403A2922692275009BD4FF /* db.json */; };
+		E28D38E12267B259004266BA /* EventBackgroundFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E02267B259004266BA /* EventBackgroundFetcher.m */; };
 		E28D38E32267CF5B004266BA /* BackgroundFetcherTests.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E22267CF5B004266BA /* BackgroundFetcherTests.m */; };
 		E2EDC106225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */; };
 /* End PBXBuildFile section */
@@ -204,8 +205,9 @@
 		C8CEC9831F3AB342002A8D88 /* UIViewController+StatusBarBackground.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "UIViewController+StatusBarBackground.m"; sourceTree = "<group>"; };
 		C8E6A3EB1F3256180098339C /* EventDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventDetailsViewController.h; sourceTree = "<group>"; };
 		C8E6A3EC1F3256180098339C /* EventDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventDetailsViewController.m; sourceTree = "<group>"; };
-		E28D38DF2267B259004266BA /* BackgroundFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundFetcher.h; sourceTree = "<group>"; };
-		E28D38E02267B259004266BA /* BackgroundFetcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundFetcher.m; sourceTree = "<group>"; };
+		E2403A2922692275009BD4FF /* db.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = db.json; path = ../../../db.json; sourceTree = "<group>"; };
+		E28D38DF2267B259004266BA /* EventBackgroundFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventBackgroundFetcher.h; sourceTree = "<group>"; };
+		E28D38E02267B259004266BA /* EventBackgroundFetcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventBackgroundFetcher.m; sourceTree = "<group>"; };
 		E28D38E22267CF5B004266BA /* BackgroundFetcherTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundFetcherTests.m; sourceTree = "<group>"; };
 		E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UNUserNotificationCenter+ConvenienceInitializer.m"; sourceTree = "<group>"; };
 		E2EDC105225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UNUserNotificationCenter+ConvenienceInitializer.h"; sourceTree = "<group>"; };
@@ -450,6 +452,7 @@
 		C8810A211F2BFE6900DCFEB6 /* SF iOS */ = {
 			isa = PBXGroup;
 			children = (
+				E2403A2922692275009BD4FF /* db.json */,
 				C8709C631F42630B00DFE7A9 /* ImageStore */,
 				C83079FC1F3649EF005CB3D2 /* Secrets */,
 				C86E38651F31B75700E35EBF /* RemoteUIImage */,
@@ -618,8 +621,8 @@
 		E2EDC103225D059100F618C9 /* UserNotification */ = {
 			isa = PBXGroup;
 			children = (
-				E28D38DF2267B259004266BA /* BackgroundFetcher.h */,
-				E28D38E02267B259004266BA /* BackgroundFetcher.m */,
+				E28D38DF2267B259004266BA /* EventBackgroundFetcher.h */,
+				E28D38E02267B259004266BA /* EventBackgroundFetcher.m */,
 				E2EDC105225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.h */,
 				E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */,
 			);
@@ -747,6 +750,7 @@
 				C86178E31F36D1CF00883EF1 /* secrets.plist in Resources */,
 				5F2FE4AC224F40F50081C2B1 /* secrets-example.plist in Resources */,
 				C8810A2F1F2BFE6900DCFEB6 /* LaunchScreen.storyboard in Resources */,
+				E2403A2A22692275009BD4FF /* db.json in Resources */,
 				C8810A2C1F2BFE6900DCFEB6 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -844,7 +848,7 @@
 				C8307A111F365E58005CB3D2 /* AsyncBlockOperation.m in Sources */,
 				C8307A081F365687005CB3D2 /* UberTravelTimeEstimateOperation.m in Sources */,
 				C82516421F2FE9E7006B9D7E /* FeedItem.m in Sources */,
-				E28D38E12267B259004266BA /* BackgroundFetcher.m in Sources */,
+				E28D38E12267B259004266BA /* EventBackgroundFetcher.m in Sources */,
 				C8CC493F1F3307DD0064B03E /* TravelTime.m in Sources */,
 				C8709C661F42632300DFE7A9 /* ImageStore.m in Sources */,
 				C825163C1F2FDF46006B9D7E /* UIColor+SFiOSColors.m in Sources */,

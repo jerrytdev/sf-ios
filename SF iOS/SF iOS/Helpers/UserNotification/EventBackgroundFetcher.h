@@ -13,7 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  Check for changes on the server to provide event changes notifications
  */
-@interface BackgroundFetcher : NSObject
+@interface EventBackgroundFetcher : NSObject
 
 - (instancetype)initWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler;
 

@@ -10,7 +10,7 @@
 #import "NSNotification+ApplicationEventNotifications.h"
 #import "FeedFetchService.h"
 #import "SwipableNavigationContainer.h"
-#import "BackgroundFetcher.h"
+#import "EventBackgroundFetcher.h"
 #import <UserNotifications/UserNotifications.h>
 
 @interface AppDelegate ()
@@ -19,7 +19,7 @@
 
 @property (nonatomic) FeedFetchService *service;
 
-@property (nonatomic) BackgroundFetcher *bgFetcher;
+@property (nonatomic) EventBackgroundFetcher *eventBgFetcher;
 
 @end
 
@@ -70,9 +70,9 @@
 - (void)application:(UIApplication *)application performFetchWithCompletionHandler:(void (^)(UIBackgroundFetchResult result))completionHandler {
 
     //    nil due to *** Terminating app due to uncaught exception 'NSInternalInconsistencyException', reason: 'this request has been neutered - you can't call -sendResponse: twice nor after encoding it'
-    self.bgFetcher = [[BackgroundFetcher alloc] initWithCompletionHandler:^(UIBackgroundFetchResult result) {
+    self.eventBgFetcher = [[EventBackgroundFetcher alloc] initWithCompletionHandler:^(UIBackgroundFetchResult result) {
         completionHandler(result);
-        self.bgFetcher = nil;
+        self.eventBgFetcher = nil;
     }];
     
 }

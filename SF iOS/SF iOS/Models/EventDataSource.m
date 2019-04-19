@@ -42,9 +42,6 @@
                                       }
                                       // Initial run of the query will pass nil for the change information
                                       if (!changes) {
-                                          [welf.delegate didChangeDataSourceWithInsertions:nil
-                                                                                   updates:nil
-                                                                                 deletions:nil];
                                           return;
                                       }
 
