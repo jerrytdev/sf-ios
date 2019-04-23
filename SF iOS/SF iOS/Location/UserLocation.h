@@ -10,7 +10,16 @@
 @import CoreLocation;
 
 NS_ASSUME_NONNULL_BEGIN
+
+@class UserLocation;
+
+@protocol UserLocationDelegate
+- (void)userLocationPermissionsChanged:(CLAuthorizationStatus)status;
+@end
+
 @interface UserLocation : NSObject <CLLocationManagerDelegate>
+
+@property (nonatomic, weak) id<UserLocationDelegate> delegate;
 
 - (BOOL)canRequestUserLocation;
 - (BOOL)canRequestLocationPermission;

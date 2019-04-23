@@ -21,7 +21,7 @@
 
 
 NS_ASSUME_NONNULL_BEGIN
-@interface EventDetailsViewController ()
+@interface EventDetailsViewController () <UserLocationDelegate>
 
 @property (nonatomic) Event *event;
 @property (nonatomic) MapView *mapView;
@@ -40,6 +40,7 @@ NS_ASSUME_NONNULL_END
         self.event = event;
         self.travelTimeService = [TravelTimeService new];
         self.userLocationService = userLocation;
+        self.userLocationService.delegate = self;
     }
     return self;
 }
@@ -162,6 +163,11 @@ NS_ASSUME_NONNULL_END
 
 - (void)dismiss {
     [self dismissViewControllerAnimated:true completion:nil];
+}
+
+// MARK: - UserLocationDelegate
+- (void)userLocationPermissionsChanged:(CLAuthorizationStatus)status {
+    [self getTravelTimes];
 }
 
 @end

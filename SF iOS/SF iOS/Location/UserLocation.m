@@ -82,6 +82,10 @@ NS_ASSUME_NONNULL_END
     [self callCompletionHandlersWithLocation:nil error:error];
 }
 
+- (void)locationManager:(CLLocationManager *)manager didChangeAuthorizationStatus:(CLAuthorizationStatus)status {
+    [self.delegate userLocationPermissionsChanged:status];
+}
+
 // MARK - Completion Handlers
 
 - (void)callCompletionHandlersWithLocation:(nullable CLLocation *)location error:(nullable NSError *)error {
