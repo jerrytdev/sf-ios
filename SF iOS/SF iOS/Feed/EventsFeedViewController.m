@@ -89,10 +89,11 @@ NS_ASSUME_NONNULL_END
     self.notificationSettingButton.translatesAutoresizingMaskIntoConstraints = false;
     [self.view addSubview:self.notificationSettingButton];
 
-    [self.notificationSettingButton.bottomAnchor constraintEqualToAnchor:self.view.safeAreaLayoutGuide.bottomAnchor
-                                                            constant:18].active = true;
-    [self.view.safeAreaLayoutGuide.rightAnchor constraintEqualToAnchor:self.notificationSettingButton.rightAnchor
-                                                              constant:18].active = true;
+    // safeAreaLayoutGuide is giving different results between pre-iPhone X and iPhone X and later devices
+    [self.view.bottomAnchor constraintEqualToAnchor:self.notificationSettingButton.bottomAnchor
+                                                                constant:18].active = true;
+    [self.view.safeAreaLayoutGuide.trailingAnchor constraintEqualToAnchor:self.notificationSettingButton.trailingAnchor
+                                                                   constant:18].active = true;
     [self.notificationSettingButton.heightAnchor constraintEqualToConstant:44].active = true;
     [self.notificationSettingButton.widthAnchor constraintEqualToConstant:44].active = true;
     [self updateNotificationButton];
