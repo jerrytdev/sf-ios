@@ -46,6 +46,7 @@
     self.view = self.collectionView;
 }
 
+// MARK: - FeedProviderDelegate
 - (void)didChangeDataSource:(nonnull id<FeedProvider>)datasource withInsertions:(nullable NSArray<NSIndexPath *> *)insertions updates:(nullable NSArray<NSIndexPath *> *)updates deletions:(nullable NSArray<NSIndexPath *> *)deletions {
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.collectionView performBatchUpdates:^{
@@ -64,6 +65,7 @@
     // no op
 }
 
+// MARK: - UICollectionView
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     return CGSizeMake(collectionView.bounds.size.width / 2 - 20, 200);
 }

@@ -64,20 +64,20 @@
 }
 
 - (void)setupConstraints {
-    [self.imageView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 5].active = true;
-    [self.imageView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant: -5].active = true;
-    [self.imageView.leftAnchor constraintEqualToAnchor:self.contentView.leftAnchor constant: 5].active = true;
-    [self.imageView.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor constant: -5].active = true;
+    [self.imageView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor].active = true;
+    [self.imageView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor].active = true;
+    [self.imageView.leftAnchor constraintEqualToAnchor:self.contentView.leftAnchor].active = true;
+    [self.imageView.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor].active = true;
 
     [self.nameLabel.bottomAnchor constraintEqualToAnchor:self.imageView.bottomAnchor].active = true;
     [self.nameLabel.leftAnchor constraintEqualToAnchor:self.imageView.leftAnchor].active = true;
     [self.nameLabel.rightAnchor constraintEqualToAnchor:self.imageView.rightAnchor].active = true;
     [self.nameLabel.heightAnchor constraintGreaterThanOrEqualToConstant:44].active = true;
 
-    [self.shadowView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor constant: 5].active = true;
-    [self.shadowView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor constant: -5].active = true;
-    [self.shadowView.leftAnchor constraintEqualToAnchor:self.contentView.leftAnchor constant: 5].active = true;
-    [self.shadowView.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor constant: -5].active = true;
+    [self.shadowView.topAnchor constraintEqualToAnchor:self.contentView.topAnchor].active = true;
+    [self.shadowView.bottomAnchor constraintEqualToAnchor:self.contentView.bottomAnchor].active = true;
+    [self.shadowView.leftAnchor constraintEqualToAnchor:self.contentView.leftAnchor].active = true;
+    [self.shadowView.rightAnchor constraintEqualToAnchor:self.contentView.rightAnchor].active = true;
 }
 
 - (void)prepareForReuse {
