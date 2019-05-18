@@ -15,6 +15,7 @@
 #import "UIImage+URL.h"
 #import "GroupCollectionView.h"
 #import "UIViewController+ErrorHandling.h"
+#import "UIActivityViewController+Utilities.h"
 
 @interface GroupCollectionViewController() <UICollectionViewDelegateFlowLayout>
 @property(nonatomic) id<FeedProvider> dataSource;
@@ -44,6 +45,19 @@
 
 - (void)loadView {
     self.view = self.collectionView;
+}
+
+- (void)viewDidLoad {
+    [super viewDidLoad];
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemAction
+                                                                                           target:self
+                                                                                           action:@selector(share)];
+}
+
+- (void)share {
+    UIActivityViewController *shareSheet = [[UIActivityViewController alloc] shareApp];
+    
+    [self presentViewController:shareSheet animated:true completion:nil];
 }
 
 // MARK: - FeedProviderDelegate

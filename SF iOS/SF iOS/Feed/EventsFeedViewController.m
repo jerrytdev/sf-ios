@@ -20,6 +20,7 @@
 #import "Group.h"
 #import "UIViewController+ErrorHandling.h"
 #import "EventFeedDelegate.h"
+#import "UIActivityViewController+Utilities.h"
 
 NS_ASSUME_NONNULL_BEGIN
 @interface EventsFeedViewController () <UITableViewDataSource, UITableViewDelegate, UIViewControllerPreviewingDelegate, UISearchBarDelegate, UISearchControllerDelegate, UISearchResultsUpdating>
@@ -224,12 +225,51 @@ NS_ASSUME_NONNULL_END
 }
 
 - (void)share {
+    NSString *shareGroupButtonTitle = NSLocalizedString(@"Share Group",
+                                                        @"Share Group");
+    
+    NSString *shareAppButtonTitle = NSLocalizedString(@"Share App",
+                                                      @"Share App");
+    
+    NSString *cancelButtonTitle = NSLocalizedString(@"Cancel", @"Cancel");
+    
+    UIAlertController *alert = [UIAlertController alertControllerWithTitle:nil
+                                                                   message:nil
+                                                            preferredStyle:UIAlertControllerStyleActionSheet];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:shareGroupButtonTitle
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                [self shareGroup];
+                                            }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:shareAppButtonTitle
+                                              style:UIAlertActionStyleDefault
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                [self shareApp];
+                                            }]];
+    
+    [alert addAction:[UIAlertAction actionWithTitle:cancelButtonTitle
+                                              style:UIAlertActionStyleDestructive
+                                            handler:^(UIAlertAction * _Nonnull action) {
+                                                
+                                            }]];
+    
+    [self presentViewController:alert animated:true completion:nil];
+}
+
+- (void)shareGroup {
     NSString *url = [NSString stringWithFormat:@"https://coffeecoffeecoffee.coffee/%@", self.dataSource.groupID];
     NSArray *items = @[[NSURL URLWithString:url]];
-    UIActivityViewController *shareSheet = [[UIActivityViewController alloc] initWithActivityItems:items
-                                                                             applicationActivities:nil];
+    UIActivityViewController *shareSheet = [[UIActivityViewController alloc] initWithActivityItems:items applicationActivities:nil];
     [self presentViewController:shareSheet animated:true completion:nil];
 }
+
+- (void)shareApp {
+    UIActivityViewController *shareSheet = [[UIActivityViewController alloc] shareApp];
+    [self presentViewController:shareSheet animated:true completion:nil];
+}
+
 - (void)viewDidAppear:(BOOL)animated {
     [super viewDidAppear:animated];
     [self.tableView reloadData];

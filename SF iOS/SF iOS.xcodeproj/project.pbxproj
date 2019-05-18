@@ -82,6 +82,7 @@
 		C8CC494C1F33BA420064B03E /* TravelTimeView.m in Sources */ = {isa = PBXBuildFile; fileRef = C8CC494B1F33BA420064B03E /* TravelTimeView.m */; };
 		CED16D5C64A6DD2CE70F99F8 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 669D4943CDB7B5B8CBC1B27E /* libPods-SF iOSTests.a */; };
 		E0037C5422A4AF58E1158B64 /* libPods-SF iOSTests.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 238F3C1035E918F044128123 /* libPods-SF iOSTests.a */; };
+		E22CBCD3228FA2C20091B99B /* UIActivityViewController+Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = E22CBCD2228FA2C20091B99B /* UIActivityViewController+Utilities.m */; };
 		E28D38E12267B259004266BA /* BackgroundFetcher.m in Sources */ = {isa = PBXBuildFile; fileRef = E28D38E02267B259004266BA /* BackgroundFetcher.m */; };
 		E2EDC106225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m in Sources */ = {isa = PBXBuildFile; fileRef = E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */; };
 /* End PBXBuildFile section */
@@ -256,6 +257,8 @@
 		C8CC494B1F33BA420064B03E /* TravelTimeView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = TravelTimeView.m; sourceTree = "<group>"; };
 		C8E6A3EB1F3256180098339C /* EventDetailsViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EventDetailsViewController.h; sourceTree = "<group>"; };
 		C8E6A3EC1F3256180098339C /* EventDetailsViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EventDetailsViewController.m; sourceTree = "<group>"; };
+		E22CBCD1228FA2C20091B99B /* UIActivityViewController+Utilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIActivityViewController+Utilities.h"; sourceTree = "<group>"; };
+		E22CBCD2228FA2C20091B99B /* UIActivityViewController+Utilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIActivityViewController+Utilities.m"; sourceTree = "<group>"; };
 		E28D38DF2267B259004266BA /* BackgroundFetcher.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BackgroundFetcher.h; sourceTree = "<group>"; };
 		E28D38E02267B259004266BA /* BackgroundFetcher.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BackgroundFetcher.m; sourceTree = "<group>"; };
 		E2EDC104225D059100F618C9 /* UNUserNotificationCenter+ConvenienceInitializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UNUserNotificationCenter+ConvenienceInitializer.m"; sourceTree = "<group>"; };
@@ -433,6 +436,7 @@
 		C82516491F3054BE006B9D7E /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				E22CBCD0228FA2AF0091B99B /* ActivityController */,
 				19DD32F2225B293600C0EE5A /* Settings */,
 				C8CC49401F330F1E0064B03E /* Concurrency */,
 				C8CC49321F32A70A0064B03E /* Application */,
@@ -689,6 +693,15 @@
 			path = EventDetails;
 			sourceTree = "<group>";
 		};
+		E22CBCD0228FA2AF0091B99B /* ActivityController */ = {
+			isa = PBXGroup;
+			children = (
+				E22CBCD1228FA2C20091B99B /* UIActivityViewController+Utilities.h */,
+				E22CBCD2228FA2C20091B99B /* UIActivityViewController+Utilities.m */,
+			);
+			path = ActivityController;
+			sourceTree = "<group>";
+		};
 		E2EDC103225D059100F618C9 /* UserNotification */ = {
 			isa = PBXGroup;
 			children = (
@@ -930,6 +943,7 @@
 				C8810A241F2BFE6900DCFEB6 /* AppDelegate.m in Sources */,
 				C8CC493B1F3303170064B03E /* TravelTimeService.m in Sources */,
 				5FCD225D226E898A002A85B8 /* Analytics.m in Sources */,
+				E22CBCD3228FA2C20091B99B /* UIActivityViewController+Utilities.m in Sources */,
 				C89A8DE31F2D926A007A5B0C /* EventDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
